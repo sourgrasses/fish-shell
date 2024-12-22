@@ -288,13 +288,16 @@ impl DirIter {
         {
             self.entry.inode = dent.d_ino;
         }
-        let typ = dirent_type_to_entry_type(dent.d_type);
-        // Do not store symlinks as we will need to resolve them.
-        if typ != Some(DirEntryType::lnk) {
-            self.entry.typ.set(typ);
+        #[cfg(not(target_os = "haiku"))]
+        {
+            let typ = dirent_type_to_entry_type(dent.d_type);
+            // Do not store symlinks as we will need to resolve them.
+            if typ != Some(DirEntryType::lnk) {
+                self.entry.typ.set(typ);
+            }
+            // This entry could be a link if it is a link or unknown.
+            self.entry.possible_link = typ.map(|t| t == DirEntryType::lnk);
         }
-        // This entry could be a link if it is a link or unknown.
-        self.entry.possible_link = typ.map(|t| t == DirEntryType::lnk);
 
         Some(Ok(&self.entry))
     }
