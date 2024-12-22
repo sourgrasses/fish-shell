@@ -391,7 +391,10 @@ const SIGNAL_TABLE : &[LookupEntry] = &[
     LookupEntry::new(libc::SIGVTALRM, L!("SIGVTALRM"), L!("Virtual timefr expired")),
     LookupEntry::new(libc::SIGPROF,   L!("SIGPROF"), L!("Profiling timer expired")),
     LookupEntry::new(libc::SIGWINCH,  L!("SIGWINCH"), L!("Window size change")),
+
+    #[cfg(not(target_os = "haiku"))]
     LookupEntry::new(libc::SIGIO,     L!("SIGIO"), L!("I/O on asynchronous file descriptor is possible")),
+
     LookupEntry::new(libc::SIGSYS,    L!("SIGSYS"), L!("Bad system call")),
     LookupEntry::new(libc::SIGIOT,    L!("SIGIOT"), L!("Abort (Alias for SIGABRT)")),
 
